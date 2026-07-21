@@ -3,130 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <title>Smart Hub</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: white;
-  display: flex;
-}
-
-/* SIDEBAR */
-.sidebar {
-  width: 200px;
-  padding: 20px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  height: 100vh;
-}
-
-.sidebar button {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-  background: transparent;
-  border: none;
-  color: white;
-  text-align: left;
-  cursor: pointer;
-}
-
-/* MAIN */
-.main {
-  flex: 1;
-  padding: 20px;
-}
-
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-/* GLASS CARDS */
-.card {
-  padding: 20px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 0 20px rgba(0,255,255,0.1);
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: scale(1.03);
-}
-
-/* BIG SLIDESHOW CARD */
-.slideshow {
-  grid-column: span 2;
-  text-align: center;
-  font-size: 28px;
-}
-
-/* BUTTON */
-button.control {
-  margin-top: 10px;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 10px;
-  background: cyan;
-  color: black;
-  cursor: pointer;
-}
-
-/* BOTTOM BAR */
-.bottom {
-  position: fixed;
-  bottom: 0;
-  left: 200px;
-  right: 0;
-  padding: 10px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: space-around;
-  font-size: 14px;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div class="sidebar">
   <h2>Hub</h2>
-  <button>🏠 Home</button>
-  <button>⚙️ Settings</button>
+  <button onclick="go('index.html')">🏠 Home</button>
+  <button onclick="go('slideshow.html')">🖼️ Display</button>
+  <button onclick="go('settings.html')">⚙️ Settings</button>
 </div>
 
 <div class="main">
 
+  <div class="topbar">
+    <h1>Home</h1>
+    <div id="topTime"></div>
+  </div>
+
   <div class="grid">
 
-    <!-- SLIDESHOW -->
-    <div class="card slideshow">
-      <div id="slideContent"></div>
+    <div class="card big">
+      <h2>🫧 Smart Display</h2>
+      <p>Tap to enter fullscreen mode</p>
+      <button onclick="go('slideshow.html')">Open</button>
     </div>
 
-    <!-- LIGHT -->
     <div class="card">
       <h3>💡 Lights</h3>
-      <button class="control" onclick="toggleLight()">Toggle</button>
+      <button onclick="toggleLight()">Toggle</button>
       <p id="lightStatus">OFF</p>
     </div>
 
-    <!-- PLUG -->
     <div class="card">
       <h3>🔌 Plug</h3>
-      <button class="control" onclick="togglePlug()">Toggle</button>
+      <button onclick="togglePlug()">Toggle</button>
       <p id="plugStatus">OFF</p>
     </div>
 
-    <!-- COUNTDOWN -->
     <div class="card">
       <h3>⏳ Countdown</h3>
       <p id="countdown"></p>
@@ -136,77 +51,6 @@ button.control {
 
 </div>
 
-<div class="bottom">
-  <div id="bottomTime"></div>
-  <div id="bottomDate"></div>
-</div>
-
-<script>
-// TOGGLES
-let lightOn = false;
-function toggleLight() {
-  lightOn = !lightOn;
-  document.getElementById("lightStatus").innerText = lightOn ? "ON" : "OFF";
-}
-
-let plugOn = false;
-function togglePlug() {
-  plugOn = !plugOn;
-  document.getElementById("plugStatus").innerText = plugOn ? "ON" : "OFF";
-}
-
-// CLOCK + DATE
-function updateTime() {
-  const now = new Date();
-
-  const time = now.toLocaleTimeString();
-  const date = now.toLocaleDateString(undefined, {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long'
-  });
-
-  document.getElementById("bottomTime").innerText = time;
-  document.getElementById("bottomDate").innerText = date;
-}
-setInterval(updateTime, 1000);
-
-// COUNTDOWN
-function updateCountdown() {
-  const target = new Date();
-  target.setHours(24,0,0,0);
-  const now = new Date();
-  const diff = target - now;
-
-  const hrs = Math.floor(diff / 1000 / 60 / 60);
-  const mins = Math.floor(diff / 1000 / 60 % 60);
-  const secs = Math.floor(diff / 1000 % 60);
-
-  document.getElementById("countdown").innerText =
-    hrs + "h " + mins + "m " + secs + "s";
-}
-setInterval(updateCountdown, 1000);
-
-// SLIDESHOW
-let slideIndex = 0;
-
-function updateSlideshow() {
-  const now = new Date();
-
-  const slides = [
-    `<div style="font-size:40px">${now.toLocaleTimeString()}</div><div>Current Time</div>`,
-    `<div>Welcome Home 👋</div>`,
-    `<div>${now.toLocaleDateString()}</div><div>Today's Date</div>`
-  ];
-
-  document.getElementById("slideContent").innerHTML = slides[slideIndex];
-
-  slideIndex = (slideIndex + 1) % slides.length;
-}
-
-setInterval(updateSlideshow, 3000);
-updateSlideshow();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
